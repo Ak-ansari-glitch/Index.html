@@ -35,7 +35,7 @@ h1 { margin-top: 10px; color: #ff4081; font-size: 22px; }
   to { transform: translateY(110vh); }
 }
 
-#proposalScreen {
+#proposalScreen, #loveLetter {
   display: none;
   position: fixed;
   inset: 0;
@@ -45,7 +45,7 @@ h1 { margin-top: 10px; color: #ff4081; font-size: 22px; }
   flex-direction: column;
   color: white;
   text-align: center;
-  overflow: hidden;
+  overflow: auto;
   padding: 20px;
 }
 
@@ -86,6 +86,12 @@ h1 { margin-top: 10px; color: #ff4081; font-size: 22px; }
   left: 50%;
   transform: translateX(-50%) scale(0);
   transition: transform 1s ease 0.5s;
+  animation: sparkle 1.5s infinite alternate;
+}
+
+@keyframes sparkle {
+  from { text-shadow: 0 0 5px white, 0 0 10px white; }
+  to { text-shadow: 0 0 20px yellow, 0 0 30px white; }
 }
 
 .ring-box.open .lid { transform: rotateX(-120deg); }
@@ -109,7 +115,9 @@ button {
   border-radius: 25px;
   background: white;
   color: #e91e63;
-  margin-top: 20px;
+  margin: 10px;
+  cursor: pointer;
+  position: relative;
 }
 </style>
 </head>
@@ -139,9 +147,29 @@ button {
     Will you stay mine forever? ❤️
   </h2>
 
-  <button id="yesBtn" style="display:none;" onclick="location.reload()">
-    Say Yes Forever 😘
-  </button>
+  <div id="buttons" style="display:none;">
+    <button onclick="showLoveLetter()">YES 😘</button>
+    <button id="noBtn">NO 😜</button>
+  </div>
+</div>
+
+<div id="loveLetter">
+  <h2>💌 To My Love Kausar Qureshi 💌</h2>
+  <p>
+  From the moment we met, you changed my world forever.
+  Every smile of yours is my happiness.
+  Every moment with you is my treasure.
+  Through good memories and bad memories,
+  I choose you again and again.
+  Not just today.
+  Not just tomorrow.
+  But forever.
+  You are my heart, my peace, my home.
+  I promise to stand with you, laugh with you,
+  and grow old with you.
+  I love you endlessly. ❤️
+  </p>
+  <button onclick="location.reload()">Play Again 😘</button>
 </div>
 
 <script>
@@ -156,6 +184,8 @@ const scoreDisplay = document.getElementById("score");
 const livesDisplay = document.getElementById("lives");
 const levelDisplay = document.getElementById("level");
 const proposalScreen = document.getElementById("proposalScreen");
+const loveLetter = document.getElementById("loveLetter");
+const noBtn = document.getElementById("noBtn");
 
 function updateUI() {
   if(score < 0) score = 0;
@@ -173,95 +203,86 @@ function createItem() {
   const random = Math.random();
   let type;
 
-  if (random < 0.4) {
-    type = "heart";
-    item.textContent = "❤️";
-  } 
-  else if (random < 0.55) {
-    type = "coolHusband";
-    item.textContent = "😎";
-  }
-  else if (random < 0.7) {
-    type = "sleepHusband";
-    item.textContent = "😴";
-  }
-  else if (random < 0.85) {
-    type = "shopping";
-    item.textContent = "🛍️";
-  }
-  else {
-    type = "bomb";
-    item.textContent = "💣";
-  }
+  if (random < 0.4) { type="heart"; item.textContent="❤️"; }
+  else if (random < 0.6) { type="bad"; item.textContent="😎"; }
+  else if (random < 0.75) { type="sleep"; item.textContent="😴"; }
+  else if (random < 0.9) { type="shop"; item.textContent="🛍️"; }
+  else { type="bomb"; item.textContent="💣"; }
 
   item.style.left = Math.random() * 85 + "vw";
   item.style.animationDuration = Math.max(1.5, 3 - level * 0.4) + "s";
 
-  item.addEventListener("pointerdown", function(e) {
+  item.addEventListener("pointerdown", function(e){
     e.preventDefault();
-    if (!gameActive) return;
+    if(!gameActive) return;
 
-    if (type === "heart") score++;
-    if (type === "coolHusband") lives--;
-    if (type === "sleepHusband") lives--;
-    if (type === "shopping") score -= 3;
-    if (type === "bomb") lives--;
+    if(type==="heart") score++;
+    else lives--;
 
     updateUI();
     item.remove();
 
-    if (lives <= 0) {
-      alert("😂 Game Over! Husband Too Strong!");
-      location.reload();
-    }
+    if(lives<=0){ alert("😂 Husband Wins!"); location.reload(); }
 
-    if (score >= levelThreshold) {
+    if(score>=levelThreshold){
       level++;
-      levelThreshold += 15;
+      levelThreshold+=15;
       clearInterval(spawnInterval);
-      spawnInterval = setInterval(createItem, Math.max(300, 800 - level * 100));
+      spawnInterval=setInterval(createItem, Math.max(300,800-level*100));
       updateUI();
     }
 
-    if (level === 4) winGame();
+    if(level===4) winGame();
   });
 
-  item.addEventListener("animationend", () => item.remove());
-
+  item.addEventListener("animationend",()=>item.remove());
   document.body.appendChild(item);
 }
 
-function winGame() {
-  gameActive = false;
+function winGame(){
+  gameActive=false;
   clearInterval(spawnInterval);
-  proposalScreen.style.display = "flex";
+  proposalScreen.style.display="flex";
   startFireworks();
 }
 
-function startFireworks() {
-  setInterval(() => {
-    const firework = document.createElement("div");
-    firework.className = "firework";
-    firework.textContent = "✨";
-    firework.style.left = Math.random() * 100 + "vw";
-    firework.style.top = Math.random() * 100 + "vh";
-    proposalScreen.appendChild(firework);
-    setTimeout(() => firework.remove(), 1000);
-  }, 300);
+function startFireworks(){
+  setInterval(()=>{
+    const f=document.createElement("div");
+    f.className="firework";
+    f.textContent="✨";
+    f.style.left=Math.random()*100+"vw";
+    f.style.top=Math.random()*100+"vh";
+    proposalScreen.appendChild(f);
+    setTimeout(()=>f.remove(),1000);
+  },300);
 }
 
-function openRingBox() {
-  const box = document.querySelector(".ring-box");
-  box.classList.add("open");
+function openRingBox(){
+  document.querySelector(".ring-box").classList.add("open");
+  setTimeout(()=>{
+    document.getElementById("finalText").style.display="block";
+    document.getElementById("buttons").style.display="block";
+  },1200);
+}
 
-  setTimeout(() => {
-    document.getElementById("finalText").style.display = "block";
-    document.getElementById("yesBtn").style.display = "inline-block";
-  }, 1200);
+function showLoveLetter(){
+  proposalScreen.style.display="none";
+  loveLetter.style.display="flex";
+}
+
+/* Funny NO Button */
+noBtn.addEventListener("mouseover", moveNoButton);
+noBtn.addEventListener("touchstart", moveNoButton);
+
+function moveNoButton(){
+  noBtn.style.position="absolute";
+  noBtn.style.left=Math.random()*80+"%";
+  noBtn.style.top=Math.random()*80+"%";
 }
 
 updateUI();
-spawnInterval = setInterval(createItem, 800);
+spawnInterval=setInterval(createItem,800);
 </script>
 
 </body>
