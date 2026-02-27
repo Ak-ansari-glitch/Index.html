@@ -1,240 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For My Love Kausar 💖</title>
+<title>Ultimate Wife Challenge 💖</title>
 <style>
-  body {
-    font-family: 'Comic Sans MS', cursive, sans-serif;
-    background: #ffe6f0;
-    text-align: center;
-    color: #ff3366;
-    margin: 0;
-    padding: 0;
-  }
-  h1 { font-size: 2em; margin-top: 15px; }
-  h2 { font-size: 1.5em; margin: 10px 0; }
-  .game-container { padding: 10px; }
-  button {
-    background-color: #ff6699;
-    border: none;
-    padding: 12px 25px;
-    margin: 5px;
-    font-size: 1em;
-    color: white;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-  button:hover { background-color: #ff3366; }
-  .hidden { display: none; }
-  .gift-box {
-    width: 120px; height: 120px;
-    margin: 30px auto;
-    background: url('https://i.imgur.com/TqgqTLO.png') no-repeat center/cover;
-    cursor: pointer;
-    animation: bounce 1s infinite;
-  }
-  @keyframes bounce {
-    0%,100% { transform: translateY(0);}
-    50% { transform: translateY(-15px);}
-  }
-  .ring { font-size: 2em; color: gold; margin-top: 10px; }
-  .puzzle-letter {
-    display: inline-block;
-    padding: 10px;
-    margin: 3px;
-    background: #ff99cc;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.2em;
-    color: white;
-  }
-  .memory-card {
-    width: 60px; height: 60px;
-    display: inline-block;
-    margin: 5px;
-    background: pink;
-    border-radius: 8px;
-    cursor: pointer;
-    vertical-align: top;
-    font-size: 1.5em;
-    line-height: 60px;
-    color: white;
-  }
-  #heart { width:40px; height:40px; border-radius:50%; position:absolute; background:red; cursor:pointer; }
-  #roses div { width:35px; height:35px; border-radius:50%; position:absolute; background:pink; cursor:pointer; }
+/* Basic styles */
+body {
+  margin:0; overflow:hidden;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom right,#ffd6e8,#ffeef5);
+  text-align:center; touch-action: manipulation;
+}
+h1{ margin-top:10px; color:#ff4081; font-size:22px; }
+#topBar{ display:flex; justify-content:space-around; font-weight:bold; margin:5px;}
+.item{ position:absolute; font-size:40px; cursor:pointer; user-select:none; animation: floatDown linear forwards; }
+@keyframes floatDown { from {transform:translateY(-60px);} to {transform:translateY(110vh);} }
+#proposalScreen,#loveLetter,#extraTasks{ display:none; position:fixed; inset:0; background: radial-gradient(circle,#ffb6c1,#ff69b4); justify-content:center; align-items:center; flex-direction:column; color:white; text-align:center; overflow:auto; padding:20px;}
+
+/* Ring Box */
+.ring-box{position:relative;width:120px;height:100px;margin:20px auto; cursor:pointer; perspective:1000px;}
+.lid{width:120px;height:50px;background:#e91e63;border-radius:10px 10px 0 0;position:absolute;top:0;transform-origin:bottom;transition:transform 1s ease;}
+.base{width:120px;height:50px;background:#ad1457;border-radius:0 0 10px 10px;position:absolute;bottom:0;}
+.ring{position:absolute;font-size:40px;top:-20px;left:50%;transform:translateX(-50%) scale(0);transition:transform 1s ease 0.5s; animation: sparkle 1.5s infinite alternate;}
+@keyframes sparkle{from{text-shadow:0 0 5px white,0 0 10px white;} to{text-shadow:0 0 20px yellow,0 0 30px white;}}
+.ring-box.open .lid{transform:rotateX(-120deg);}
+.ring-box.open .ring{transform:translateX(-50%) scale(1.3);}
+
+/* Fireworks */
+.firework{position:absolute;font-size:25px;animation:explode 1s ease-out forwards;}
+@keyframes explode{from{transform:scale(0);opacity:1;} to{transform:scale(3);opacity:0;}}
+
+/* Falling roses */
+.rose{position:absolute;font-size:24px;pointer-events:none;animation:fall 5s linear forwards;}
+@keyframes fall{from{transform:translateY(-50px) rotate(0deg);} to{transform:translateY(110vh) rotate(360deg);}}
+
+/* Glowing I Love You */
+#loveLetter h1{font-size:32px;font-weight:bold;text-shadow:0 0 10px red,0 0 20px yellow; animation: glow 1.5s ease-in-out infinite alternate;}
+@keyframes glow{0%{text-shadow:0 0 5px #fff,0 0 10px #ff0;} 100%{text-shadow:0 0 20px #ff69b4,0 0 40px #fff;}}
+
+/* Extra tasks */
+.balloon{position:absolute;font-size:30px; animation: floatUp 6s linear forwards;}
+@keyframes floatUp{from{transform:translateY(110vh);} to{transform:translateY(-50px);}}
+.note{position:absolute;font-size:28px; animation: floatDown linear forwards;}
+
+/* Love Letter Text */
+#loveLetter p{max-width:90%; margin:15px auto;font-size:18px; line-height:1.6;}
+button{padding:12px 25px;font-size:18px;border:none;border-radius:25px;background:white;color:#e91e63;margin:10px; cursor:pointer;position:relative; touch-action:manipulation;}
 </style>
 </head>
 <body>
+<h1>💖 Ultimate Wife Challenge 💖</h1>
+<div id="topBar">
+  <div id="score">Score:0</div>
+  <div id="lives">Lives:❤️❤️❤️</div>
+  <div id="level">Level:1</div>
+</div>
 
-<h1>💖 For My Love, Kausar 💖</h1>
-<div class="game-container" id="game-container">
-
-  <!-- Level 1 -->
-  <div id="level1">
-    <h2>Level 1: Fun & Romantic Questions</h2>
-    <p id="question"></p>
-    <button onclick="answer('yes')">Yes</button>
-    <button onclick="answer('no')">No</button>
+<!-- Proposal Screen -->
+<div id="proposalScreen">
+  <h2>🎉 YOU WON MY HEART 🎉</h2>
+  <h2>My Love Kausar Qureshi 💖</h2>
+  <div class="ring-box" onclick="openRingBox()">
+    <div class="lid"></div>
+    <div class="base"><div class="ring">💍</div></div>
   </div>
-
-  <!-- Level 2 -->
-  <div id="level2" class="hidden">
-    <h2>Level 2: Catch the Heart 💘</h2>
-    <p>Tap the moving heart!</p>
-    <div id="heart"></div>
+  <h2 id="finalText" style="display:none;">Will you stay mine forever? ❤️</h2>
+  <div id="buttons" style="display:none;">
+    <button onclick="startExtraTasks()">YES 😘</button>
+    <button id="noBtn">NO 😜</button>
   </div>
+</div>
 
-  <!-- Level 3 -->
-  <div id="level3" class="hidden">
-    <h2>Level 3: Swipe the Roses 🌹</h2>
-    <p>Tap all roses!</p>
-    <div id="roses"></div>
-  </div>
+<!-- Extra Tasks -->
+<div id="extraTasks">
+  <h2>💌 Pop the Love Balloons & Dodge Music Notes! 💖</h2>
+  <button onclick="showLoveLetter()">Finish & Read Letter 💌</button>
+</div>
 
-  <!-- Level 4 -->
-  <div id="level4" class="hidden">
-    <h2>Level 4: Puzzle of Love 💌</h2>
-    <p>Rearrange the letters to form "LOVE"</p>
-    <div id="puzzle"></div>
-  </div>
-
-  <!-- Level 5 -->
-  <div id="level5" class="hidden">
-    <h2>Level 5: Memory Match 💖</h2>
-    <p>Find all matching hearts!</p>
-    <div id="memory"></div>
-  </div>
-
-  <!-- Level 6 -->
-  <div id="level6" class="hidden">
-    <h2>Final Level: Open the Gift Box 🎁</h2>
-    <p>Tap the gift box to reveal your surprise!</p>
-    <div class="gift-box" id="gift-box"></div>
-    <div id="surprise" class="hidden">
-      <p class="ring">💍</p>
-      <p>My love, Kausar Qureshi 💖, I love you forever!</p>
-      <p id="love-letter">
-        Dear Kausar,<br>
-        Every moment with you is a treasure. Thank you for being my sunshine and my heart.<br>
-        I promise to make you smile every day, forever and always.<br>
-        Yours truly, 💕
-      </p>
-    </div>
-  </div>
-
+<!-- Love Letter -->
+<div id="loveLetter">
+  <h1>I Love You ❤️</h1>
+  <h2>To My Love Kausar Qureshi 💌</h2>
+  <p>
+  From the moment we met, you changed my world forever.<br>
+  Every smile of yours is my happiness.<br>
+  Every moment with you is my treasure.<br>
+  Through good memories and bad memories,<br>
+  I choose you again and again.<br>
+  Not just today. Not just tomorrow. But forever.<br>
+  You are my heart, my peace, my home.<br>
+  I promise to stand with you, laugh with you, and grow old with you.<br>
+  I love you endlessly. ❤️
+  </p>
+  <button onclick="location.reload()">Play Again 😘</button>
 </div>
 
 <script>
-  // Level 1
-  const questions = [
-    "Do you love me more than chocolate?",
-    "Will you marry me someday? 😘",
-    "Am I your favorite human?",
-    "Do you want to go on endless adventures together?",
-    "Should we have endless cuddles tonight?"
-  ];
-  let currentQuestion=0;
-  const questionEl=document.getElementById('question');
-  function showQuestion(){ questionEl.innerText=questions[currentQuestion]; }
-  function answer(ans){
-    currentQuestion++;
-    if(currentQuestion<questions.length) showQuestion();
-    else { document.getElementById('level1').classList.add('hidden'); document.getElementById('level2').classList.remove('hidden'); startHeartGame(); }
-  }
-  showQuestion();
+// Game Variables
+let score=0,lives=3,level=1,levelThreshold=15,gameActive=true,spawnInterval;
+const scoreDisplay=document.getElementById("score");
+const livesDisplay=document.getElementById("lives");
+const levelDisplay=document.getElementById("level");
+const proposalScreen=document.getElementById("proposalScreen");
+const loveLetter=document.getElementById("loveLetter");
+const noBtn=document.getElementById("noBtn");
+const extraTasks=document.getElementById("extraTasks");
 
-  // Level 2
-  const heart=document.getElementById('heart');
-  function moveHeart(){
-    heart.style.left = Math.random()*(window.innerWidth-40)+'px';
-    heart.style.top = Math.random()*(window.innerHeight-150)+'px';
-  }
-  heart.addEventListener('click', ()=>{
-    document.getElementById('level2').classList.add('hidden');
-    document.getElementById('level3').classList.remove('hidden');
-    startRoseGame();
+// Update UI
+function updateUI(){ if(score<0)score=0; scoreDisplay.textContent="Score:"+score; livesDisplay.textContent="Lives:"+ "❤️".repeat(lives); levelDisplay.textContent="Level:"+level; }
+
+// Floating Items
+function createItem(){
+  if(!gameActive) return;
+  const item=document.createElement("div"); item.className="item";
+  const r=Math.random(); let type;
+  if(r<0.4){type="heart"; item.textContent="❤️";}
+  else if(r<0.6){type="bad"; item.textContent="😎";}
+  else if(r<0.75){type="sleep"; item.textContent="😴";}
+  else if(r<0.9){type="shop"; item.textContent="🛍️";}
+  else{type="bomb"; item.textContent="💣";}
+  item.style.left=Math.random()*85+"vw";
+  item.style.animationDuration=Math.max(1.5,3-level*0.4)+"s";
+  item.addEventListener("pointerdown",function(e){
+    e.preventDefault(); if(!gameActive) return;
+    if(type==="heart") score++; else if(type==="shop") score-=3; else lives--;
+    updateUI(); item.remove();
+    if(lives<=0){ alert("😂 Husband Wins!"); location.reload();}
+    if(score>=levelThreshold){level++; levelThreshold+=15; clearInterval(spawnInterval); spawnInterval=setInterval(createItem, Math.max(300,800-level*100)); updateUI();}
+    if(level===4) winGame();
   });
-  setInterval(moveHeart,800);
+  item.addEventListener("animationend",()=>item.remove());
+  document.body.appendChild(item);
+}
 
-  // Level 3
-  const rosesContainer=document.getElementById('roses');
-  let roseCount=0;
-  function startRoseGame(){
-    for(let i=0;i<5;i++){
-      const rose=document.createElement('div');
-      rose.style.top=Math.random()*(window.innerHeight-150)+'px';
-      rose.style.left=Math.random()*(window.innerWidth-50)+'px';
-      rose.addEventListener('click',()=>{
-        rose.remove(); roseCount++;
-        if(roseCount===5){
-          document.getElementById('level3').classList.add('hidden');
-          document.getElementById('level4').classList.remove('hidden');
-          startPuzzleGame();
-        }
-      });
-      rosesContainer.appendChild(rose);
-    }
-  }
+// Win Game
+function winGame(){ gameActive=false; clearInterval(spawnInterval); proposalScreen.style.display="flex"; startFireworks(); }
+function startFireworks(){ setInterval(()=>{ const f=document.createElement("div"); f.className="firework"; f.textContent="✨"; f.style.left=Math.random()*100+"vw"; f.style.top=Math.random()*100+"vh"; proposalScreen.appendChild(f); setTimeout(()=>f.remove(),1000); },300); }
 
-  // Level 4
-  const puzzleContainer=document.getElementById('puzzle');
-  const puzzleWord="LOVE".split('');
-  let selectedLetters=[];
-  function startPuzzleGame(){
-    const shuffled=puzzleWord.sort(()=>Math.random()-0.5);
-    shuffled.forEach(letter=>{
-      const span=document.createElement('span');
-      span.className='puzzle-letter';
-      span.innerText=letter;
-      span.addEventListener('click',()=>{
-        selectedLetters.push(letter);
-        span.style.visibility='hidden';
-        if(selectedLetters.join('')===puzzleWord.join('')){
-          document.getElementById('level4').classList.add('hidden');
-          document.getElementById('level5').classList.remove('hidden');
-          startMemoryGame();
-        }
-      });
-      puzzleContainer.appendChild(span);
-    });
-  }
+// Ring Box
+function openRingBox(){
+  document.querySelector(".ring-box").classList.add("open");
+  setTimeout(()=>{ document.getElementById("finalText").style.display="block"; document.getElementById("buttons").style.display="block"; },1200);
+}
 
-  // Level 5
-  const memoryContainer=document.getElementById('memory');
-  let memoryCards=['💖','💖','🌹','🌹','💌','💌'];
-  let firstCard=null, secondCard=null;
-  function startMemoryGame(){
-    memoryCards.sort(()=>Math.random()-0.5).forEach(symbol=>{
-      const card=document.createElement('div');
-      card.className='memory-card';
-      card.dataset.symbol=symbol;
-      card.innerText='';
-      card.addEventListener('click',()=>{
-        if(card.innerText==='' && !secondCard){
-          card.innerText=symbol;
-          if(!firstCard) firstCard=card;
-          else secondCard=card;
-          if(firstCard && secondCard){
-            if(firstCard.dataset.symbol===secondCard.dataset.symbol){ firstCard=null; secondCard=null; }
-            else { setTimeout(()=>{ firstCard.innerText=''; secondCard.innerText=''; firstCard=null; secondCard=null; },500); }
-          }
-        }
-        if(document.querySelectorAll('.memory-card:empty').length===0){
-          document.getElementById('level5').classList.add('hidden');
-          document.getElementById('level6').classList.remove('hidden');
-        }
-      });
-      memoryContainer.appendChild(card);
-    });
-  }
+// Show Extra Tasks
+function startExtraTasks(){
+  proposalScreen.style.display="none";
+  extraTasks.style.display="flex";
+  startBalloons();
+  startNotes();
+}
 
-  // Level 6
-  const giftBox=document.getElementById('gift-box');
-  const surprise=document.getElementById('surprise');
-  giftBox.addEventListener('click',()=>{ giftBox.style.display='none'; surprise.classList.remove('hidden'); });
+// Balloons
+function startBalloons(){
+  setInterval(()=>{
+    const b=document.createElement("div"); b.className="balloon"; b.textContent="💌"; 
+    b.style.left=Math.random()*90+"vw"; document.body.appendChild(b);
+    b.addEventListener("click",()=>{ score+=5; updateUI(); b.remove(); });
+    setTimeout(()=>b.remove(),6000);
+  },800);
+}
+
+// Music Notes
+function startNotes(){
+  setInterval(()=>{
+    const n=document.createElement("div"); n.className="note"; n.textContent="🎵";
+    n.style.left=Math.random()*90+"vw"; document.body.appendChild(n);
+    n.addEventListener("click",()=>{ lives--; updateUI(); n.remove(); if(lives<=0){ alert("😂 Game Over!"); location.reload(); } });
+    setTimeout(()=>n.remove(),6000);
+  },1000);
+}
+
+// Show Love Letter
+function showLoveLetter(){ extraTasks.style.display="none"; loveLetter.style.display="flex"; startPetals(); }
+
+// Funny NO Button
+noBtn.addEventListener("mouseover",moveNoButton); noBtn.addEventListener("touchstart",moveNoButton);
+function moveNoButton(){ noBtn.style.position="absolute"; noBtn.style.left=Math.random()*80+"%"; noBtn.style.top=Math.random()*80+"%"; }
+
+// Falling roses
+function startPetals(){ setInterval(()=>{ const r=document.createElement("div"); r.className="rose"; r.textContent="🌹"; r.style.left=Math.random()*100+"vw"; r.style.fontSize=(15+Math.random()*20)+"px"; loveLetter.appendChild(r); setTimeout(()=>r.remove(),5000); },300); }
+
+// Start Game
+updateUI(); spawnInterval=setInterval(createItem,800);
 </script>
-
 </body>
 </html>
