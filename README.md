@@ -16,17 +16,18 @@ body {
 h1 {
   margin-top: 15px;
   color: #ff4081;
-  font-size: 24px;
+  font-size: 22px;
 }
 
 #score {
-  font-size: 18px;
+  font-size: 20px;
   margin: 10px;
+  font-weight: bold;
 }
 
 .item {
   position: absolute;
-  font-size: 40px;
+  font-size: 42px;
   cursor: pointer;
   user-select: none;
   animation: floatDown linear forwards;
@@ -43,6 +44,7 @@ h1 {
   width: 100%;
   font-weight: bold;
   color: #d81b60;
+  padding: 0 10px;
 }
 
 #proposalScreen {
@@ -61,7 +63,7 @@ h1 {
 }
 
 #proposalScreen h2 {
-  font-size: 26px;
+  font-size: 24px;
   color: #880e4f;
 }
 
@@ -76,8 +78,8 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-  background: #e91e63;
+button:active {
+  transform: scale(0.95);
 }
 </style>
 </head>
@@ -91,60 +93,58 @@ button:hover {
 <div id="proposalScreen">
   <h2>💍 SECRET LEVEL UNLOCKED 💍</h2>
   <p>You survived the husband trap 😂</p>
-  <p>But now I have a serious question...</p>
+  <p>But now I have something serious to ask...</p>
   <h2>Will you continue being my wife forever? ❤️</h2>
-  <p>(No clicking husband allowed in real life either 😎)</p>
   <button onclick="restartGame()">Say Yes Again 😘</button>
 </div>
 
 <script>
 let score = 0;
 let gameActive = true;
+let spawnInterval;
+
 const scoreDisplay = document.getElementById("score");
 const message = document.getElementById("message");
 const proposalScreen = document.getElementById("proposalScreen");
+
+function updateScore() {
+  if (score < 0) score = 0; // prevent negative
+  scoreDisplay.innerText = "Score: " + score;
+}
 
 function createItem() {
   if (!gameActive) return;
 
   const item = document.createElement("div");
-  item.classList.add("item");
+  item.className = "item";
 
-  // Random chance: mostly hearts, sometimes husband
   const isHusband = Math.random() < 0.25;
 
-  if (isHusband) {
-    item.innerHTML = "😎";
-  } else {
-    item.innerHTML = "❤️";
-  }
-
+  item.innerHTML = isHusband ? "😎" : "❤️";
   item.style.left = Math.random() * 85 + "vw";
   item.style.animationDuration = (3 + Math.random() * 2) + "s";
 
-  item.onclick = function() {
+  item.addEventListener("click", function() {
     if (!gameActive) return;
 
     if (isHusband) {
       score -= 2;
-      message.innerHTML = "WHY WOULD YOU CLICK YOUR HUSBAND?! 😂";
+      message.innerText = "WHY WOULD YOU CLICK YOUR HUSBAND?! 😂";
     } else {
       score += 1;
-      message.innerHTML = "Good girl 😘 Keep collecting my love!";
+      message.innerText = "Good girl 😘 Keep collecting my love!";
     }
 
-    scoreDisplay.innerHTML = "Score: " + score;
+    updateScore();
     item.remove();
 
     if (score >= 20) {
       unlockProposal();
     }
-  };
+  });
 
   item.addEventListener("animationend", function() {
-    if (item.parentNode) {
-      item.remove();
-    }
+    item.remove();
   });
 
   document.body.appendChild(item);
@@ -152,18 +152,21 @@ function createItem() {
 
 function unlockProposal() {
   gameActive = false;
+  clearInterval(spawnInterval);
   proposalScreen.style.display = "flex";
 }
 
 function restartGame() {
   score = 0;
-  scoreDisplay.innerHTML = "Score: 0";
-  message.innerHTML = "Only click the ❤️ hearts... NOT your husband 😜";
+  updateScore();
+  message.innerText = "Only click the ❤️ hearts... NOT your husband 😜";
   proposalScreen.style.display = "none";
   gameActive = true;
+  spawnInterval = setInterval(createItem, 700);
 }
 
-setInterval(createItem, 700);
+// Start game
+spawnInterval = setInterval(createItem, 700);
 </script>
 
 </body>
